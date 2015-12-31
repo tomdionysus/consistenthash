@@ -84,9 +84,28 @@ func (me *ServerNode) DeregisterNode(server *ServerNetworkNode) error {
   return nil
 }
 
-// Return the ID of the 'primary' node responsible for the supplied data key.
+// Return the 'primary' ServerNetworkNode responsible for the supplied data key.
 func (me *ServerNode) GetNodeFor(key Key) *ServerNetworkNode {
   found, _, node := me.Network.Next(key)
   if !found { _, node = me.Network.First() }
   return node.(*ServerNetworkNode)
+}
+
+// Return at most totalNodes distinct ServerNetworkNodes after the supplied Key.
+func (me *ServerNode) GetNodesFor(key Key, totalNodes int) []*ServerNetworkNode {
+  var nodes map[Key]*ServerNetworkNode = map[Key]*ServerNetworkNode{}
+  if totalNodes > len(me.NetworkNodes) { totalNodes = len(me.NetworkNodes)+1 }
+  
+  for len(nodes) < totalNodes {
+    found, ky, nd := me.Network.Next(key)
+    if !found { ky, nd = me.Network.First() }
+    key = Key(ky.ValueOf().([16]byte))
+    var node *ServerNetworkNode = nd.(*ServerNetworkNode)
+    _, found = nodes[node.ID]
+    if !found { nodes[node.ID] = node }
+  }
+
+  var out []*ServerNetworkNode = []*ServerNetworkNode{}
+  for _, node :=range nodes { out = append(out, node) }
+  return out
 }

@@ -97,4 +97,43 @@ func TestGetNodeFor(t *testing.T) {
   assert.Equal(t, nodeId2, nodeId3)
 }
 
+func TestGetNodesFor(t *testing.T) {
+  inst := []*ServerNode{
+    NewServerNode("host1"),
+    NewServerNode("host2"),
+    NewServerNode("host3"),
+    NewServerNode("host4"),
+  }
+
+  for _, i := range inst {
+    for _, j := range inst {
+      if i!=j { i.RegisterNode(&j.ServerNetworkNode) }
+    }
+  }
+
+  // Should agree on key placement
+  k1 := NewRandomKey()
+
+  nodeIds := inst[0].GetNodesFor(k1, 2)
+  assert.Equal(t, 2, len(nodeIds))
+  assert.NotEqual(t, nodeIds[0], nodeIds[1])
+
+  // And go around the circle
+  k2 := Key{ 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF }
+  
+  nodeIds = inst[0].GetNodesFor(k2, 2)
+  assert.Equal(t, 2, len(nodeIds))
+  assert.NotEqual(t, nodeIds[0], nodeIds[1])
+
+  // And ask for more nodes than possible
+  nodeIds = inst[0].GetNodesFor(k2, 5)
+  assert.Equal(t, 4, len(nodeIds))
+
+  for x, i := range nodeIds {
+    for y, j := range nodeIds {
+      if x!=y { assert.NotEqual(t, i, j) }
+    }
+  }
+}
+
 
