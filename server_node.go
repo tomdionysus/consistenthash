@@ -111,6 +111,11 @@ func (me *ServerNode) DeregisterNode(server *ServerNetworkNode) error {
   return nil
 }
 
+func (me *ServerNode) NodeRegistered(key Key) bool {
+  _, found := me.NetworkNodes[key]
+  return found
+}
+
 // Return the 'primary' ServerNetworkNode responsible for the supplied data key.
 func (me *ServerNode) GetNodeFor(key Key) *ServerNetworkNode {
   found, _, node := me.Network.Next(key)
