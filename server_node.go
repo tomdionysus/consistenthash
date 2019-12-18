@@ -125,7 +125,7 @@ func (me *ServerNode) GetNodesFor(key Key, totalNodes int) []*ServerNetworkNode 
   for len(nodes) < totalNodes {
     found, ky, nd := me.Network.Next(key)
     if !found { ky, nd = me.Network.First() }
-    key = Key(ky.ValueOf().([NETWORK_ID_SIZE_BYTES]byte))
+    key = Key(ky.ValueOf().([NODE_ID_SIZE]byte))
     var node *ServerNetworkNode = nd.(*ServerNetworkNode)
     _, found = nodes[node.ID]
     if !found { nodes[node.ID] = node }

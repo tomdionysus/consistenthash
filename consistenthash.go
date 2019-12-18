@@ -7,6 +7,6 @@ package consistenthash
 
 const(
   DISTRIBUTION_MAX = 512
-  NETWORK_ID_SIZE_BYTES = 16
-  KEY_SIZE_BYTES = 16
+  NODE_ID_SIZE = 16
+  KEY_SIZE = 16
 )
