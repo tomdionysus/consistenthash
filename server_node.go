@@ -1,8 +1,6 @@
 package consistenthash
 
 import(
-  "math/rand"
-  "time"
   bt "github.com/tomdionysus/binarytree"
   "errors"
 )
@@ -52,7 +50,6 @@ func NewServerNode(hostAddr string) *ServerNode {
 func (me *ServerNode) Init() {
   me.Distribution = NodeDistribution{}
   for x:=0; x<DISTRIBUTION_MAX; x++ {
-    rand.Seed(time.Now().UTC().UnixNano())
     me.Distribution[x] = NewRandomKey()
     me.Network.Set(me.Distribution[x], &me.ServerNetworkNode)
   }

@@ -81,8 +81,8 @@ func TestGetNodeFor(t *testing.T) {
   nodeId2 := inst2.GetNodeFor(k1)
   nodeId3 := inst3.GetNodeFor(k1)
 
-  assert.Equal(t, nodeId1, nodeId2)
-  assert.Equal(t, nodeId2, nodeId3)
+  assert.Equal(t, nodeId1.ID, nodeId2.ID)
+  assert.Equal(t, nodeId2.ID, nodeId3.ID)
 
   // And go around the circle
 
@@ -93,8 +93,8 @@ func TestGetNodeFor(t *testing.T) {
   nodeId2 = inst2.GetNodeFor(k2)
   nodeId3 = inst3.GetNodeFor(k2)
 
-  assert.Equal(t, nodeId1, nodeId2)
-  assert.Equal(t, nodeId2, nodeId3)
+  assert.Equal(t, nodeId1.ID, nodeId2.ID)
+  assert.Equal(t, nodeId2.ID, nodeId3.ID)
 }
 
 func TestGetNodesFor(t *testing.T) {

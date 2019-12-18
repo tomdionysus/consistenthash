@@ -3,7 +3,7 @@ package consistenthash
 import(
   "bytes"
   bt "github.com/tomdionysus/binarytree"
-  "math/rand"
+  "crypto/rand"
   "crypto/md5"
 )
 
@@ -43,11 +43,15 @@ func (me NodeId) AsKey() Key {
 
 // Return a new random NodeId
 func NewRandomNodeId() NodeId {
-  b := [NODE_ID_SIZE]byte{}
-  for i:=0; i<NODE_ID_SIZE; i++ {
-    b[i] = byte(rand.Intn(256))
+  b := make([]byte, NODE_ID_SIZE)
+  _, err := rand.Read(b)
+  if err != nil {
+    panic("crypto/rand failed")
   }
-  x := NodeId(b)
+  x := NodeId{}
+  for i := 0; i<NODE_ID_SIZE; i++ {
+    x[i] = b[i]
+  }
   return x
 }
 

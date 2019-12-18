@@ -3,7 +3,7 @@ package consistenthash
 import(
   "bytes"
   bt "github.com/tomdionysus/binarytree"
-  "math/rand"
+  "crypto/rand"
   "crypto/md5"
 )
 
@@ -43,11 +43,15 @@ func getKeySlice(t bt.Comparable) []byte {
 
 // Return a new random Key
 func NewRandomKey() Key {
-  b := [KEY_SIZE]byte{}
-  for i:=0; i<KEY_SIZE; i++ {
-    b[i] = byte(rand.Intn(256))
+  b := make([]byte, KEY_SIZE)
+  _, err := rand.Read(b)
+  if err != nil {
+    panic("crypto/rand failed")
   }
-  x := Key(b)
+  x := Key{}
+  for i := 0; i<KEY_SIZE; i++ {
+    x[i] = b[i]
+  }
   return x
 }
 
