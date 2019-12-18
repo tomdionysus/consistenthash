@@ -19,21 +19,21 @@ func TestRegisterNode(t *testing.T) {
   inst3 := NewServerNode("host3")
 
   // Can't add node to itself
-  _, err := inst1.RegisterNode(&inst1.ServerNetworkNode)
+  err := inst1.RegisterNode(&inst1.ServerNetworkNode)
   assert.NotNil(t, err)
   assert.Equal(t, "Cannot register a node with itself", err.Error())
 
   // Should register OK
-  _, err = inst1.RegisterNode(&inst2.ServerNetworkNode)
+  err = inst1.RegisterNode(&inst2.ServerNetworkNode)
   assert.Nil(t, err)
 
   // Can't register twice
-  _, err = inst1.RegisterNode(&inst2.ServerNetworkNode)
+  err = inst1.RegisterNode(&inst2.ServerNetworkNode)
   assert.NotNil(t, err)
   assert.Equal(t, "Node is already registered", err.Error())
 
   // Should register multiple nodes
-  _, err = inst1.RegisterNode(&inst3.ServerNetworkNode)
+  err = inst1.RegisterNode(&inst3.ServerNetworkNode)
   assert.Nil(t, err)
 }
 
@@ -47,13 +47,13 @@ func TestDeregisterNode(t *testing.T) {
   assert.Equal(t, "Node is not registered", err.Error())
 
   // Should deregister OK
-  _, err = inst1.RegisterNode(&inst2.ServerNetworkNode)
+  err = inst1.RegisterNode(&inst2.ServerNetworkNode)
   assert.Nil(t, err)
   err = inst1.DeregisterNode(&inst2.ServerNetworkNode)
   assert.Nil(t, err)
 
   // Can't deregister twice
-  _, err = inst1.RegisterNode(&inst2.ServerNetworkNode)
+  err = inst1.RegisterNode(&inst2.ServerNetworkNode)
   assert.Nil(t, err)
   err = inst1.DeregisterNode(&inst2.ServerNetworkNode)
   assert.Nil(t, err)

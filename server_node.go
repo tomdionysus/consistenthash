@@ -5,8 +5,7 @@ import(
   "errors"
 )
 
-// An array of Keys representing the distribution
-// of a node.
+// An array of Keys representing the distribution of a node.
 type NodeDistribution [DISTRIBUTION_MAX]Key
 
 type Redistribution struct {
@@ -56,38 +55,22 @@ func (me *ServerNode) Init() {
 }
 
 // Register another node with the network.
-func (me *ServerNode) RegisterNode(server *ServerNetworkNode) ([]Redistribution, error) {
+func (me *ServerNode) RegisterNode(server *ServerNetworkNode) error {
   if server.ID == me.ID {
-    return nil, errors.New("Cannot register a node with itself")
+    return errors.New("Cannot register a node with itself")
   }
   _, found := me.NetworkNodes[server.ID] 
   if found {
-    return nil, errors.New("Node is already registered")
+    return errors.New("Node is already registered")
   }
-
-  redistributions := []Redistribution{}
   
   me.NetworkNodes[server.ID] = server
   for _, insertnodekey := range server.Distribution {
-
-    found, key, pn := me.Network.Previous(insertnodekey)
-    if !found { key, pn = me.Network.Last() }
-
-    previousNode := pn.(*ServerNetworkNode)
-    if previousNode.ID == server.ID { continue }
-
-    redist := Redistribution{
-      SourceNodeID: previousNode.ID,
-      DestinationNodeID: server.ID,
-      Start: key.(Key),
-      End: insertnodekey,
-    } 
-    redistributions = append(redistributions, redist)
     me.Network.Set(insertnodekey, server)
   }
 
   me.Network.Balance()
-  return redistributions, nil
+  return nil
 }
 
 // Deregister (remove) a previously registered node from the network.
@@ -96,7 +79,9 @@ func (me *ServerNode) DeregisterNode(server *ServerNetworkNode) error {
     return errors.New("Node is not registered")
   }
   delete(me.NetworkNodes, server.ID)
-  for _, x := range server.Distribution { me.Network.Clear(x);  }
+  for _, x := range server.Distribution { 
+    me.Network.Clear(x)
+  }
 
   me.Network.Balance()
   return nil
