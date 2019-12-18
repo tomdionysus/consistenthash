@@ -7,12 +7,6 @@ import(
   "errors"
 )
 
-const(
-  DISTRIBUTION_MAX = 512
-  NETWORK_ID_SIZE_BYTES = 16
-  KEY_SIZE_BYTES = 16
-)
-
 // An array of Keys representing the distribution
 // of a node.
 type NodeDistribution [DISTRIBUTION_MAX]Key
@@ -131,7 +125,7 @@ func (me *ServerNode) GetNodesFor(key Key, totalNodes int) []*ServerNetworkNode 
   for len(nodes) < totalNodes {
     found, ky, nd := me.Network.Next(key)
     if !found { ky, nd = me.Network.First() }
-    key = Key(ky.ValueOf().([16]byte))
+    key = Key(ky.ValueOf().([NETWORK_ID_SIZE_BYTES]byte))
     var node *ServerNetworkNode = nd.(*ServerNetworkNode)
     _, found = nodes[node.ID]
     if !found { nodes[node.ID] = node }

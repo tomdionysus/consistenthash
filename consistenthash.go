@@ -4,3 +4,9 @@
 //
 // For more information on consistent hashing please see https://en.wikipedia.org/wiki/Consistent_hashing
 package consistenthash
+
+const(
+  DISTRIBUTION_MAX = 512
+  NETWORK_ID_SIZE_BYTES = 16
+  KEY_SIZE_BYTES = 16
+)

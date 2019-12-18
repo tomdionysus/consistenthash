@@ -3,13 +3,12 @@ package consistenthash
 import(
   "bytes"
   bt "github.com/tomdionysus/binarytree"
-  "time"
   "math/rand"
   "crypto/md5"
 )
 
-// Key is [16]byte, essentially a uint128
-type Key [16]byte
+// Key is [KEY_SIZE_BYTES]byte, essentially a uint128
+type Key [KEY_SIZE_BYTES]byte
 
 // Return true if this key is less than the supplied Key.
 func (me Key) LessThan(other bt.Comparable) bool {
@@ -26,22 +25,21 @@ func (me Key) GreaterThan(other bt.Comparable) bool {
   return bytes.Compare(me[:], getSlice(other)) > 0
 } 
 
-// Return an interface{} of the underlying [16]byte.
+// Return an interface{} of the underlying [KEY_SIZE_BYTES]byte.
 func (me Key) ValueOf() interface{} {
-  return [16]byte(me)
+  return [KEY_SIZE_BYTES]byte(me)
 }
 
-// Internal function to convert [16]byte to []byte
+// Internal function to convert [KEY_SIZE_BYTES]byte to []byte
 func getSlice(t bt.Comparable) []byte {
-  x := t.ValueOf().([16]byte)
+  x := t.ValueOf().([KEY_SIZE_BYTES]byte)
   return x[:]
 }
 
 // Return a new random Key
 func NewRandomKey() Key {
-  rand.Seed(time.Now().UTC().UnixNano())
-  b := [16]byte{}
-  for i:=0; i<16; i++ {
+  b := [KEY_SIZE_BYTES]byte{}
+  for i:=0; i<KEY_SIZE_BYTES; i++ {
     b[i] = byte(rand.Intn(256))
   }
   x := Key(b)
