@@ -36,6 +36,11 @@ func getNodeIdSlice(t bt.Comparable) []byte {
   return x[:]
 }
 
+// Return Key as NodeId
+func (me NodeId) AsKey() Key {
+  return me.ValueOf().(Key)
+}
+
 // Return a new random NodeId
 func NewRandomNodeId() NodeId {
   b := [NODE_ID_SIZE]byte{}

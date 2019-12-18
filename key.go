@@ -30,6 +30,11 @@ func (me Key) ValueOf() interface{} {
   return [KEY_SIZE]byte(me)
 }
 
+// Return Key as NodeId
+func (me Key) AsNodeId() NodeId {
+  return me.ValueOf().(NodeId)
+}
+
 // Internal function to convert [NODE_ID_SIZE]byte to []byte
 func getKeySlice(t bt.Comparable) []byte {
   x := t.ValueOf().([KEY_SIZE]byte)

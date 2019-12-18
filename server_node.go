@@ -12,8 +12,8 @@ import(
 type NodeDistribution [DISTRIBUTION_MAX]Key
 
 type Redistribution struct {
-  SourceNodeID Key
-  DestinationNodeID Key
+  SourceNodeID NodeId
+  DestinationNodeID NodeId
   Start Key
   End Key
 }
@@ -21,7 +21,7 @@ type Redistribution struct {
 // The details of a node on the network, including its
 // ID, host address, and Distrubution.
 type ServerNetworkNode struct {
-  ID Key
+  ID NodeId
   HostAddr string
   Distribution NodeDistribution
 }
@@ -31,17 +31,17 @@ type ServerNetworkNode struct {
 // and deregistration of other ServerNetworkNodes
 type ServerNode struct {
   ServerNetworkNode
-  NetworkNodes map[Key]*ServerNetworkNode
+  NetworkNodes map[NodeId]*ServerNetworkNode
   Network *bt.Tree
 }
 
 // Return a pointer to a new ServerNode with the specified host address.
 func NewServerNode(hostAddr string) *ServerNode {
   node := &ServerNode{ 
-    NetworkNodes: map[Key]*ServerNetworkNode{}, 
+    NetworkNodes: map[NodeId]*ServerNetworkNode{}, 
     Network: bt.NewTree(),
   }
-  node.ID = NewRandomKey()
+  node.ID = NewRandomNodeId()
   node.HostAddr = hostAddr
   node.Init()
   return node
@@ -105,8 +105,8 @@ func (me *ServerNode) DeregisterNode(server *ServerNetworkNode) error {
   return nil
 }
 
-func (me *ServerNode) NodeRegistered(key Key) bool {
-  _, found := me.NetworkNodes[key]
+func (me *ServerNode) NodeRegistered(nodeid NodeId) bool {
+  _, found := me.NetworkNodes[nodeid]
   return found
 }
 
@@ -119,7 +119,7 @@ func (me *ServerNode) GetNodeFor(key Key) *ServerNetworkNode {
 
 // Return at most totalNodes distinct ServerNetworkNodes after the supplied Key.
 func (me *ServerNode) GetNodesFor(key Key, totalNodes int) []*ServerNetworkNode {
-  var nodes map[Key]*ServerNetworkNode = map[Key]*ServerNetworkNode{}
+  var nodes map[NodeId]*ServerNetworkNode = map[NodeId]*ServerNetworkNode{}
   if totalNodes > len(me.NetworkNodes) { totalNodes = len(me.NetworkNodes)+1 }
   
   for len(nodes) < totalNodes {
